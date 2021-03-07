@@ -1,3 +1,4 @@
+/* global chrome */
 import React from 'react';
 import Exercise from '../components/Exercise';
 import styled from 'styled-components';
