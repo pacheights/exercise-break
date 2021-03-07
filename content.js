@@ -5,14 +5,15 @@ setInterval(() => {
     if (popup) {
       popup.parentNode.removeChild(popup);
     } else {
-      const container = createContainer();
-      const text = createText('Work Out');
-      container.appendChild(text);
-      document.body.appendChild(container);
+      // const container = createContainer();
+      // const text = createText('Work Out');
+      // container.appendChild(text);
+      // document.body.appendChild(container);
     }
     // alert('new minute');
   }
 }, 1000);
+
 const createContainer = () => {
   var div = document.createElement('div');
   div.id = 'workOutPopup';
