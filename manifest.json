@@ -1,0 +1,10 @@
+{
+  "name": "Day Trainer",
+  "version": "1.0",
+  "description": "Take a few minutes, a few times a day, to exercise",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_title": "Day Trainer"
+  }
+}
