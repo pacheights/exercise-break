@@ -15,3 +15,7 @@
 .schedule > button {
   min-width: 50px;
 }
+
+.input-small {
+  width: 100px;
+}
