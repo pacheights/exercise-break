@@ -74,11 +74,10 @@ const Exercise = ({ name, id }) => {
           <label className='label'>Per Day ({perDay})</label>
           <input
             value={perDay}
+            onChange={handlePerDayChange}
             type='range'
             min='0'
             max='300'
-            placeholder='# Per Day'
-            onChange={handlePerDayChange}
           />
         </div>
       )}
