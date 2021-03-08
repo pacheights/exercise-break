@@ -3,18 +3,43 @@ import styled from 'styled-components';
 
 const TimeWindow = ({}) => {
   const [numSets, setNumSets] = useState('0');
+  const [start, setStart] = useState('09:00');
+  const [end, setEnd] = useState('18:00');
 
   const handleSetChange = (e) => {
     setNumSets(e.target.value);
+  };
+
+  const handleTimeChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'start') {
+      setStart(value);
+    } else {
+      setEnd(value);
+    }
   };
 
   return (
     <TimeWindowContainer>
       <label className='label'>Time Window</label>
       <RangeContainer>
-        <TimePicker type='time' name='start' min='09:00' max='18:00' />
+        <TimePicker
+          onChange={handleTimeChange}
+          value={start}
+          name='start'
+          type='time'
+          min='09:00'
+          max={end}
+        />
         <Hyphen>-</Hyphen>
-        <TimePicker type='time' name='start' min='09:00' max='18:00' />
+        <TimePicker
+          onChange={handleTimeChange}
+          value={end}
+          name='end'
+          type='time'
+          min={start}
+          max='18:00'
+        />
       </RangeContainer>
       <label className='label'>Sets Per Day ({numSets})</label>
       <input
