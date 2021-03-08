@@ -27,8 +27,13 @@ const AppContainer = styled.div`
     'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     Helvetica, Arial, sans-serif;
   height: 500px;
-  width: 350px;
+  width: 360px;
+  overflow-y: scroll;
   border: 1px solid black;
+  ::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+  }
 `;
 
 export default App;
