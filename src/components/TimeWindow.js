@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+/* global chrome */
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { localEnv } from '../util/constants';
+import { getTotalMinutes } from '../util/methods';
 
 const TimeWindow = ({}) => {
+  const key = 'time_window';
   const [numSets, setNumSets] = useState('0');
   const [start, setStart] = useState('09:00');
   const [end, setEnd] = useState('18:00');
@@ -13,11 +17,46 @@ const TimeWindow = ({}) => {
   const handleTimeChange = (e) => {
     const { name, value } = e.target;
     if (name === 'start') {
-      setStart(value);
+      const start = value;
+      if (getTotalMinutes(start) <= getTotalMinutes(end)) {
+        setStart(start);
+      }
     } else {
-      setEnd(value);
+      const end = value;
+      if (getTotalMinutes(end) >= getTotalMinutes(start)) {
+        setEnd(end);
+      }
     }
   };
+
+  const saveScheduleChanges = ({ numSets, start, end }) => {
+    if (localEnv) return;
+    chrome.storage.local.set({
+      [key]: {
+        numSets,
+        start,
+        end,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (localEnv) return;
+    chrome.storage.local.get([key], (savedValues) => {
+      if (savedValues[key]) {
+        const { numSets, start, end } = savedValues[key];
+        setNumSets(numSets);
+        setStart(start);
+        setEnd(end);
+      } else {
+        saveScheduleChanges({ numSets, start, end });
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    saveScheduleChanges({ numSets, start, end });
+  }, [numSets, start, end]);
 
   return (
     <TimeWindowContainer>

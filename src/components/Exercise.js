@@ -1,7 +1,7 @@
 /* global chrome */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { localEnv } from '../constants';
+import { localEnv, daysOrder } from '../util/constants';
 
 const defaultSchedule = {
   m: false,
@@ -15,7 +15,6 @@ const Exercise = ({ name, id }) => {
   const [showExercise, setShowExercise] = useState(false);
   const [schedule, setSchedule] = useState(defaultSchedule);
   const [perDay, setPerDay] = useState('0');
-  const days = Object.keys(schedule);
 
   const handleDayClick = (e) => {
     const key = e.target.name;
@@ -32,6 +31,33 @@ const Exercise = ({ name, id }) => {
   const handleExerciseDisplay = (e) => {
     setShowExercise((showExercise) => !showExercise);
   };
+
+  const saveExerciseInfo = ({ schedule, perDay }) => {
+    if (localEnv) return;
+    chrome.storage.local.set({
+      [id]: {
+        schedule,
+        perDay,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (localEnv) return;
+    chrome.storage.local.get([id], (savedValues) => {
+      if (savedValues[id]) {
+        const { schedule, perDay } = savedValues[id];
+        setSchedule(schedule);
+        setPerDay(perDay);
+      } else {
+        saveExerciseInfo({ schedule, perDay });
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    saveExerciseInfo({ schedule, perDay });
+  }, [schedule, perDay]);
 
   return (
     <ExerciseContainer>
@@ -55,7 +81,7 @@ const Exercise = ({ name, id }) => {
         <div className='card-content'>
           <label className='label'>Schedule</label>
           <Schedule>
-            {days.map((day) => {
+            {daysOrder.map((day) => {
               const label = `${day.slice(0, 1).toUpperCase()}${day.slice(1)}`;
               const classNames = ['button'];
               if (schedule[day]) classNames.push('is-info');
