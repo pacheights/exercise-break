@@ -1,15 +1,18 @@
 /* global chrome */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { localEnv } from '../util/constants';
-import { getTotalMinutes } from '../util/methods';
+import moment from 'moment';
 
-const TimeWindow = ({}) => {
-  const key = 'time_window';
-  const [numSets, setNumSets] = useState('0');
-  const [start, setStart] = useState('09:00');
-  const [end, setEnd] = useState('18:00');
+const getTimeFromTimestamp = (timestamp) => timestamp.slice(0, 4);
 
+const TimeWindow = ({
+  numSets,
+  setNumSets,
+  start,
+  setStart,
+  minsBetweenSets,
+  setMinsBetweenSets,
+}) => {
   const handleSetChange = (e) => {
     setNumSets(e.target.value);
   };
@@ -18,48 +21,40 @@ const TimeWindow = ({}) => {
     const { name, value } = e.target;
     if (name === 'start') {
       const start = value;
-      if (getTotalMinutes(start) <= getTotalMinutes(end)) {
-        setStart(start);
-      }
-    } else {
-      const end = value;
-      if (getTotalMinutes(end) >= getTotalMinutes(start)) {
-        setEnd(end);
-      }
+      setStart(start);
     }
   };
 
-  const saveScheduleChanges = ({ numSets, start, end }) => {
-    if (localEnv) return;
-    chrome.storage.local.set({
-      [key]: {
-        numSets,
-        start,
-        end,
-      },
-    });
+  const handleMinsBetweenSetsChange = (e) => {
+    setMinsBetweenSets(e.target.value);
   };
 
-  useEffect(() => {
-    if (localEnv) return;
-    chrome.storage.local.get([key], (savedValues) => {
-      if (savedValues[key]) {
-        const { numSets, start, end } = savedValues[key];
-        setNumSets(numSets);
-        setStart(start);
-        setEnd(end);
-      } else {
-        saveScheduleChanges({ numSets, start, end });
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    saveScheduleChanges({ numSets, start, end });
-  }, [numSets, start, end]);
+  const end = moment(`02/02/2002 ${getTimeFromTimestamp(start)}`)
+    .add(parseInt(minsBetweenSets) * parseInt(numSets), 'm')
+    .format('HH:mm');
 
   return (
     <TimeWindowContainer>
+      <SetsPerDayContainer>
+        <label className='label'>Sets Per Day ({numSets})</label>
+        <input
+          value={numSets}
+          onChange={handleSetChange}
+          type='range'
+          min='0'
+          max='12'
+        />
+      </SetsPerDayContainer>
+      <MinsBetweenSetsContainer>
+        <label className='label'>Mins Between Sets ({minsBetweenSets})</label>
+        <input
+          value={minsBetweenSets}
+          onChange={handleMinsBetweenSetsChange}
+          type='range'
+          min='0'
+          max='180'
+        />
+      </MinsBetweenSetsContainer>
       <label className='label'>Time Window</label>
       <RangeContainer>
         <TimePicker
@@ -67,27 +62,10 @@ const TimeWindow = ({}) => {
           value={start}
           name='start'
           type='time'
-          min='09:00'
-          max={end}
         />
         <Hyphen>-</Hyphen>
-        <TimePicker
-          onChange={handleTimeChange}
-          value={end}
-          name='end'
-          type='time'
-          min={start}
-          max='18:00'
-        />
+        <TimePicker disabled={true} value={end} name='end' type='time' />
       </RangeContainer>
-      <label className='label'>Sets Per Day ({numSets})</label>
-      <input
-        value={numSets}
-        onChange={handleSetChange}
-        type='range'
-        min='0'
-        max='12'
-      />
     </TimeWindowContainer>
   );
 };
@@ -111,6 +89,14 @@ const TimePicker = styled.input`
   padding: 8px;
   border-radius: 4px;
   border: 1px solid lightgray;
+`;
+
+const SetsPerDayContainer = styled.div`
+  margin-bottom: 16px;
+`;
+
+const MinsBetweenSetsContainer = styled.div`
+  margin-bottom: 16px;
 `;
 
 export { TimeWindow };

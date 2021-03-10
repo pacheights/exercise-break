@@ -1,4 +1,4 @@
-export const localEnv = false;
+export const localEnv = true;
 export const daysOrder = ['m', 't', 'w', 'th', 'f'];
 
 export const EXERCISE_MAP = {
@@ -6,4 +6,12 @@ export const EXERCISE_MAP = {
   'sit-ups': 'Sit Ups',
   planks: 'Planks',
   'jumping-jacks': 'Jumping Jacks',
+};
+
+export const DEFAULT_SCHEDULE = {
+  m: false,
+  t: false,
+  w: false,
+  th: false,
+  f: false,
 };

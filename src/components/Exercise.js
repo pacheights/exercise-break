@@ -1,63 +1,24 @@
 /* global chrome */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { localEnv, daysOrder } from '../util/constants';
+import { daysOrder } from '../util/constants';
 
-const defaultSchedule = {
-  m: false,
-  t: false,
-  w: false,
-  th: false,
-  f: false,
-};
-
-const Exercise = ({ name, id }) => {
-  const [showExercise, setShowExercise] = useState(false);
-  const [schedule, setSchedule] = useState(defaultSchedule);
-  const [perDay, setPerDay] = useState('0');
-
+const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
   const handleDayClick = (e) => {
-    const key = e.target.name;
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [key]: !prevSchedule[key],
-    }));
-  };
-
-  const handlePerDayChange = (e) => {
-    setPerDay(e.target.value);
-  };
-
-  const handleExerciseDisplay = (e) => {
-    setShowExercise((showExercise) => !showExercise);
-  };
-
-  const saveExerciseInfo = ({ schedule, perDay }) => {
-    if (localEnv) return;
-    chrome.storage.local.set({
-      [id]: {
-        schedule,
-        perDay,
-      },
+    const day = e.target.name;
+    handleUpdate('schedule', {
+      ...schedule,
+      [day]: !schedule[day],
     });
   };
 
-  useEffect(() => {
-    if (localEnv) return;
-    chrome.storage.local.get([id], (savedValues) => {
-      if (savedValues[id]) {
-        const { schedule, perDay } = savedValues[id];
-        setSchedule(schedule);
-        setPerDay(perDay);
-      } else {
-        saveExerciseInfo({ schedule, perDay });
-      }
-    });
-  }, []);
+  const handlePerSetChange = (e) => {
+    handleUpdate('perSet', e.target.value);
+  };
 
-  useEffect(() => {
-    saveExerciseInfo({ schedule, perDay });
-  }, [schedule, perDay]);
+  const handleExerciseDisplay = () => {
+    handleUpdate('showExercise', !showExercise);
+  };
 
   return (
     <ExerciseContainer>
@@ -90,17 +51,17 @@ const Exercise = ({ name, id }) => {
                   name={day}
                   className={classNames.join(' ')}
                   onClick={handleDayClick}
-                  key={`${id}${day}`}
+                  key={day}
                 >
                   {label}
                 </button>
               );
             })}
           </Schedule>
-          <label className='label'>Per Day ({perDay})</label>
+          <label className='label'>Per Set ({perSet})</label>
           <input
-            value={perDay}
-            onChange={handlePerDayChange}
+            value={perSet}
+            onChange={handlePerSetChange}
             type='range'
             min='0'
             max='300'
