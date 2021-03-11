@@ -1,7 +1,7 @@
 /* global chrome */
 import React from 'react';
 import styled from 'styled-components';
-import { daysOrder } from '../util/constants';
+import { DAYS } from '../util/constants';
 
 const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
   const handleDayClick = (e) => {
@@ -42,7 +42,7 @@ const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
         <div className='card-content'>
           <label className='label'>Schedule</label>
           <Schedule>
-            {daysOrder.map((day) => {
+            {DAYS.map((day) => {
               const label = `${day.slice(0, 1).toUpperCase()}${day.slice(1)}`;
               const classNames = ['button'];
               if (schedule[day]) classNames.push('is-info');
@@ -64,7 +64,7 @@ const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
             onChange={handlePerSetChange}
             type='range'
             min='0'
-            max='300'
+            max='120'
           />
         </div>
       )}

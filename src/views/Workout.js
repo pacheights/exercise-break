@@ -36,6 +36,14 @@ const Workout = () => {
   const [start, setStart] = useState('09:00');
   const [minsBetweenSets, setMinsBetweenSets] = useState('0');
 
+  const workout = buildWorkoutSchedule({
+    exerciseSchedules,
+    numSets,
+    start,
+    minsBetweenSets,
+  });
+  // console.log(workout);
+
   const handleExerciseUpdate = (exercise, property, value) => {
     setExerciseSchedules((exerciseSchedules) => ({
       ...exerciseSchedules,

@@ -29,8 +29,11 @@ const TimeWindow = ({
     setMinsBetweenSets(e.target.value);
   };
 
-  const end = moment(`02/02/2002 ${getTimeFromTimestamp(start)}`)
-    .add(parseInt(minsBetweenSets) * parseInt(numSets), 'm')
+  const end = moment(
+    `02/02/2002 ${getTimeFromTimestamp(start)}`,
+    'MM/DD/YYYY HH:mm'
+  )
+    .add(parseInt(minsBetweenSets) * (parseInt(numSets) - 1), 'm')
     .format('HH:mm');
 
   return (
@@ -53,6 +56,7 @@ const TimeWindow = ({
           type='range'
           min='0'
           max='180'
+          step='5'
         />
       </MinsBetweenSetsContainer>
       <label className='label'>Time Window</label>

@@ -1,30 +1,41 @@
-import { EXERCISE_MAP, daysOrder } from './constants';
+import { EXERCISE_MAP, DAYS } from './constants';
+import moment from 'moment';
 
-export const buildWorkoutSchedule = (savedValues) => {
-  const days = {
-    m: {},
-    t: {},
-    w: {},
-    th: {},
-    f: {},
-  };
-
-  // add intervals to days
-  const startMins = getTotalMinutes(savedValues['time_window']['start']);
-  const endMins = getTotalMinutes(savedValues['time_window']['end']);
-  const exerciseWindowMins = endMins - startMins;
-
-  console.log(endMins - startMins, savedValues);
-  const numSets = parseInt(savedValues['time_window']['num_sets']);
-  const minsBetweenSets = Math.floor(exerciseWindowMins / numSets);
-
+export const buildWorkoutSchedule = ({
+  exerciseSchedules,
+  numSets,
+  start,
+  minsBetweenSets,
+}) => {
+  const workout = {};
+  const daySchedule = {};
+  const timestamps = [];
+  let timestamp = moment(`01/01/2002 ${start}`, 'MM/DD/YYYY HH:mm');
   for (let i = 0; i < numSets; i++) {
-    // for ()
+    const time = timestamp.format('HH:mm');
+    daySchedule[time] = {};
+    timestamps.push(time);
+    timestamp = timestamp.add(minsBetweenSets, 'm');
   }
 
-  // add exercises to days
-  for (const exercise of Object.keys(EXERCISE_MAP)) {
+  for (const day of DAYS) {
+    workout[day] = { ...daySchedule };
   }
+
+  const exercises = Object.keys(exerciseSchedules);
+  for (const exercise of exercises) {
+    for (const day of DAYS) {
+      if (exerciseSchedules[exercise].schedule[day]) {
+        for (const timestamp of timestamps) {
+          workout[day][timestamp] = {
+            [exercise]: exerciseSchedules[exercise].perSet,
+          };
+        }
+      }
+    }
+  }
+
+  return workout;
 };
 
 export const getTotalMinutes = (time) => {

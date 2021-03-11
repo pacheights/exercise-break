@@ -82,20 +82,28 @@ const ReminderContainer = styled.div`
   width: 300px;
   padding: 16px;
   background-color: white;
+  font-size: 15px;
 
   .card {
     margin-bottom: 8px;
+
+    .card-header-title {
+      padding: 10px 12px;
+    }
   }
 `;
 
 const Title = styled.p`
   color: #363636 !important;
   font-weight: 600 !important;
+  font-size: 20px;
+  margin-bottom: 20px;
 `;
 
 const ButtonContainer = styled.div`
   .button {
-    height: 25px;
+    height: 35px;
+    font-size: 14px;
   }
   margin-top: 24px;
 `;
