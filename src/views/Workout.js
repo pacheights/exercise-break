@@ -48,6 +48,7 @@ const Workout = () => {
       start,
       minsBetweenSets,
     });
+    console.log(workout);
 
     if (!localEnv) {
       chrome.storage.local.set({

@@ -1,9 +1,9 @@
 /* global chrome */
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
-const getTimeFromTimestamp = (timestamp) => timestamp.slice(0, 4);
+const getTimeFromTimestamp = (timestamp) => timestamp.slice(0, 5);
 
 const TimeWindow = ({
   numSets,
@@ -21,7 +21,6 @@ const TimeWindow = ({
     for (let i = 0; i < numSets; i++) {
       end = end.add(minsBetweenSets, 'm');
     }
-    console.log(end.format('HH:mm'));
     return end.format('HH:mm');
   };
 

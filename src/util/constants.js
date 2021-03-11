@@ -1,4 +1,4 @@
-export const localEnv = true;
+export const localEnv = false;
 export const DAYS = ['m', 't', 'w', 'th', 'f'];
 
 export const EXERCISE_MAP = {
