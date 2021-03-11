@@ -1,4 +1,3 @@
-/* global chrome */
 import React from 'react';
 import styled from 'styled-components';
 import { DAYS } from '../util/constants';
