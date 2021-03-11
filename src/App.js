@@ -26,13 +26,13 @@ const AppContainer = styled.div`
   font-family: 'BlinkMacSystemFont', '-apple-system', 'Segoe UI', 'Roboto',
     'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     Helvetica, Arial, sans-serif;
-  height: 600px;
+  height: 500px;
   width: 360px;
   overflow-y: scroll;
   border: 1px solid lightgray;
   ::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
+    width: 0 !important; /* Remove scrollbar space */
+    background: transparent !important; /* Optional: just make scrollbar invisible */
   }
 `;
 

@@ -13,7 +13,7 @@ const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
   };
 
   const handlePerSetChange = (e) => {
-    handleUpdate('perSet', e.target.value);
+    handleUpdate('perSet', parseInt(e.target.value));
   };
 
   const handleExerciseDisplay = () => {
@@ -40,7 +40,7 @@ const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
       </div>
       {showExercise && (
         <div className='card-content'>
-          <label className='label'>Schedule</label>
+          {/* <label className='label'>Schedule</label> */}
           <Schedule>
             {DAYS.map((day) => {
               const label = `${day.slice(0, 1).toUpperCase()}${day.slice(1)}`;

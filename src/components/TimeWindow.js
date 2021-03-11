@@ -13,9 +13,21 @@ const TimeWindow = ({
   minsBetweenSets,
   setMinsBetweenSets,
 }) => {
-  const handleSetChange = (e) => {
-    setNumSets(e.target.value);
+  const getEnd = (start) => {
+    let end = moment(
+      `02/02/2002 ${getTimeFromTimestamp(start)}`,
+      'MM/DD/YYYY HH:mm'
+    );
+    for (let i = 0; i < numSets; i++) {
+      end = end.add(minsBetweenSets, 'm');
+    }
+    console.log(end.format('HH:mm'));
+    return end.format('HH:mm');
   };
+
+  const end = getEnd(start);
+
+  const handleSetChange = (e) => setNumSets(parseInt(e.target.value));
 
   const handleTimeChange = (e) => {
     const { name, value } = e.target;
@@ -26,15 +38,8 @@ const TimeWindow = ({
   };
 
   const handleMinsBetweenSetsChange = (e) => {
-    setMinsBetweenSets(e.target.value);
+    setMinsBetweenSets(parseInt(e.target.value));
   };
-
-  const end = moment(
-    `02/02/2002 ${getTimeFromTimestamp(start)}`,
-    'MM/DD/YYYY HH:mm'
-  )
-    .add(parseInt(minsBetweenSets) * (parseInt(numSets) - 1), 'm')
-    .format('HH:mm');
 
   return (
     <TimeWindowContainer>

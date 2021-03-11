@@ -20,29 +20,45 @@ const getDefaultExerciseSchedule = () => {
 };
 
 const Workout = () => {
-  // if (!localEnv) {
-  //   chrome.storage.onChanged.addListener(function (changes) {
-  //     chrome.storage.local.get(null, (savedValues) => {
-  //       // console.log(savedValues);
-  //       buildWorkoutSchedule(savedValues);
-  //     });
-  //   });
-  // }
-
-  const [exerciseSchedules, setExerciseSchedules] = useState(() =>
-    getDefaultExerciseSchedule()
-  );
   const [numSets, setNumSets] = useState('0');
   const [start, setStart] = useState('09:00');
   const [minsBetweenSets, setMinsBetweenSets] = useState('0');
+  const [exerciseSchedules, setExerciseSchedules] = useState(() =>
+    getDefaultExerciseSchedule()
+  );
 
-  const workout = buildWorkoutSchedule({
-    exerciseSchedules,
-    numSets,
-    start,
-    minsBetweenSets,
-  });
-  // console.log(workout);
+  useEffect(() => {
+    if (!localEnv) {
+      chrome.storage.local.get(null, (savedValues) => {
+        console.log(savedValues);
+        savedValues['numSets'] && setNumSets(savedValues['numSets']);
+        savedValues['start'] && setStart(savedValues['start']);
+        savedValues['minsBetweenSets'] &&
+          setMinsBetweenSets(savedValues['minsBetweenSets']);
+        savedValues['exerciseSchedules'] &&
+          setExerciseSchedules(savedValues['exerciseSchedules']);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const workout = buildWorkoutSchedule({
+      exerciseSchedules,
+      numSets,
+      start,
+      minsBetweenSets,
+    });
+
+    if (!localEnv) {
+      chrome.storage.local.set({
+        workout,
+        numSets,
+        start,
+        minsBetweenSets,
+        exerciseSchedules,
+      });
+    }
+  }, [numSets, start, minsBetweenSets, exerciseSchedules]);
 
   const handleExerciseUpdate = (exercise, property, value) => {
     setExerciseSchedules((exerciseSchedules) => ({

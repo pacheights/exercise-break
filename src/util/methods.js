@@ -1,4 +1,4 @@
-import { EXERCISE_MAP, DAYS } from './constants';
+import { DAYS } from './constants';
 import moment from 'moment';
 
 export const buildWorkoutSchedule = ({
@@ -25,10 +25,13 @@ export const buildWorkoutSchedule = ({
   const exercises = Object.keys(exerciseSchedules);
   for (const exercise of exercises) {
     for (const day of DAYS) {
-      if (exerciseSchedules[exercise].schedule[day]) {
+      const isScheduledForDay = exerciseSchedules[exercise].schedule[day];
+      const { perSet } = exerciseSchedules[exercise];
+      if (isScheduledForDay && parseInt(perSet) > 0) {
         for (const timestamp of timestamps) {
           workout[day][timestamp] = {
-            [exercise]: exerciseSchedules[exercise].perSet,
+            ...workout[day][timestamp],
+            [exercise]: perSet,
           };
         }
       }
@@ -36,10 +39,4 @@ export const buildWorkoutSchedule = ({
   }
 
   return workout;
-};
-
-export const getTotalMinutes = (time) => {
-  const [hrs, mins] = time.split(':');
-  const totalMins = parseInt(hrs) * 60 + parseInt(mins);
-  return totalMins;
 };
