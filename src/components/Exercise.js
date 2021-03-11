@@ -1,36 +1,23 @@
 /* global chrome */
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { localEnv } from '../constants';
+import { DAYS } from '../util/constants';
 
-const defaultSchedule = {
-  m: false,
-  t: false,
-  w: false,
-  th: false,
-  f: false,
-};
-
-const Exercise = ({ name, id }) => {
-  const [showExercise, setShowExercise] = useState(false);
-  const [schedule, setSchedule] = useState(defaultSchedule);
-  const [perDay, setPerDay] = useState('0');
-  const days = Object.keys(schedule);
-
+const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
   const handleDayClick = (e) => {
-    const key = e.target.name;
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [key]: !prevSchedule[key],
-    }));
+    const day = e.target.name;
+    handleUpdate('schedule', {
+      ...schedule,
+      [day]: !schedule[day],
+    });
   };
 
-  const handlePerDayChange = (e) => {
-    setPerDay(e.target.value);
+  const handlePerSetChange = (e) => {
+    handleUpdate('perSet', parseInt(e.target.value));
   };
 
-  const handleExerciseDisplay = (e) => {
-    setShowExercise((showExercise) => !showExercise);
+  const handleExerciseDisplay = () => {
+    handleUpdate('showExercise', !showExercise);
   };
 
   return (
@@ -53,9 +40,9 @@ const Exercise = ({ name, id }) => {
       </div>
       {showExercise && (
         <div className='card-content'>
-          <label className='label'>Schedule</label>
+          {/* <label className='label'>Schedule</label> */}
           <Schedule>
-            {days.map((day) => {
+            {DAYS.map((day) => {
               const label = `${day.slice(0, 1).toUpperCase()}${day.slice(1)}`;
               const classNames = ['button'];
               if (schedule[day]) classNames.push('is-info');
@@ -64,20 +51,20 @@ const Exercise = ({ name, id }) => {
                   name={day}
                   className={classNames.join(' ')}
                   onClick={handleDayClick}
-                  key={`${id}${day}`}
+                  key={day}
                 >
                   {label}
                 </button>
               );
             })}
           </Schedule>
-          <label className='label'>Per Day ({perDay})</label>
+          <label className='label'>Per Set ({perSet})</label>
           <input
-            value={perDay}
-            onChange={handlePerDayChange}
+            value={perSet}
+            onChange={handlePerSetChange}
             type='range'
             min='0'
-            max='300'
+            max='120'
           />
         </div>
       )}

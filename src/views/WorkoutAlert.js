@@ -2,20 +2,34 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ShadowRoot } from '../ShadowRoot';
+import moment from 'moment';
+import { localEnv, DAYS, EXERCISE_MAP } from '../util/constants';
 
 const WorkoutAlert = () => {
   const [visible, setVisible] = useState(false);
   const [timer, setTimer] = useState();
+  const [workouts, setWorkouts] = useState([]);
 
   const getInterval = () =>
     setInterval(() => {
-      if (new Date().getSeconds() === 0) {
-        if (document.visibilityState === 'hidden') return;
-        if (!visible) {
+      if (localEnv) return;
+      const time = moment().format('HH:mm');
+      const dayIdx = new Date().getDay() - 1;
+      if (dayIdx < 0 || dayIdx > 4) return;
+      const day = DAYS[dayIdx];
+      chrome.storage.local.get(['workout'], (res) => {
+        const workouts = res.workout;
+        const tabOpen = document.visibilityState !== 'hidden';
+        if (workouts[day] && workouts[day][time] && tabOpen && !visible) {
+          const workout = workouts[day][time];
+          const workoutKeys = Object.keys(workout);
+          setWorkouts(
+            workoutKeys.map((key) => [EXERCISE_MAP[key], workout[key]])
+          );
           setVisible(true);
         }
-      }
-    }, 1000);
+      });
+    }, 60000);
 
   useEffect(() => {
     clearInterval(timer);
@@ -36,28 +50,24 @@ const WorkoutAlert = () => {
         {visible ? (
           <ReminderContainer>
             <Title className='subtitle'>Exercise Break</Title>
-            <div className='card'>
-              <header class='card-header'>
-                <p class='card-header-title'>20 x Push Ups</p>
-              </header>
-            </div>
-            <div className='card'>
-              <header class='card-header'>
-                <p class='card-header-title'>1 x Plank</p>
-              </header>
-            </div>
+            {workouts.map((workout) => {
+              const [label, perSet] = workout;
+              return (
+                <div className='card' key={label}>
+                  <header class='card-header'>
+                    <p class='card-header-title'>
+                      {perSet} x {label}
+                    </p>
+                  </header>
+                </div>
+              );
+            })}
             <ButtonContainer className='buttons'>
               <button
                 onClick={handleOnClick}
                 className='button is-info is-light'
               >
-                Submit
-              </button>
-              <button
-                onClick={handleOnClick}
-                className='button is-danger is-light'
-              >
-                Dismiss
+                Close
               </button>
             </ButtonContainer>
           </ReminderContainer>
@@ -82,20 +92,28 @@ const ReminderContainer = styled.div`
   width: 300px;
   padding: 16px;
   background-color: white;
+  font-size: 15px;
 
   .card {
     margin-bottom: 8px;
+
+    .card-header-title {
+      padding: 10px 12px;
+    }
   }
 `;
 
 const Title = styled.p`
   color: #363636 !important;
   font-weight: 600 !important;
+  font-size: 20px;
+  margin-bottom: 20px;
 `;
 
 const ButtonContainer = styled.div`
   .button {
-    height: 25px;
+    height: 35px;
+    font-size: 14px;
   }
   margin-top: 24px;
 `;

@@ -29,10 +29,10 @@ const AppContainer = styled.div`
   height: 500px;
   width: 360px;
   overflow-y: scroll;
-  /* border: 1px solid black; */
+  border: 1px solid lightgray;
   ::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
+    width: 0 !important; /* Remove scrollbar space */
+    background: transparent !important; /* Optional: just make scrollbar invisible */
   }
 `;
 

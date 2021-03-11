@@ -1,10 +1,76 @@
 /* global chrome */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Exercise, TimeWindow } from '../components';
 import styled from 'styled-components';
-import { EXERCISES } from '../constants';
+import { EXERCISE_MAP, localEnv, DEFAULT_SCHEDULE } from '../util/constants';
+import { buildWorkoutSchedule } from '../util/methods';
+
+const EXERCISES = Object.keys(EXERCISE_MAP);
+
+const getDefaultExerciseSchedule = () => {
+  const exerciseSchedules = {};
+  for (const exercise of EXERCISES) {
+    exerciseSchedules[exercise] = {
+      showExercise: false,
+      perSet: 0,
+      schedule: { ...DEFAULT_SCHEDULE },
+    };
+  }
+  return exerciseSchedules;
+};
 
 const Workout = () => {
+  const [numSets, setNumSets] = useState('0');
+  const [start, setStart] = useState('09:00');
+  const [minsBetweenSets, setMinsBetweenSets] = useState('0');
+  const [exerciseSchedules, setExerciseSchedules] = useState(() =>
+    getDefaultExerciseSchedule()
+  );
+
+  useEffect(() => {
+    if (!localEnv) {
+      chrome.storage.local.get(null, (savedValues) => {
+        console.log(savedValues);
+        savedValues['numSets'] && setNumSets(savedValues['numSets']);
+        savedValues['start'] && setStart(savedValues['start']);
+        savedValues['minsBetweenSets'] &&
+          setMinsBetweenSets(savedValues['minsBetweenSets']);
+        savedValues['exerciseSchedules'] &&
+          setExerciseSchedules(savedValues['exerciseSchedules']);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const workout = buildWorkoutSchedule({
+      exerciseSchedules,
+      numSets,
+      start,
+      minsBetweenSets,
+    });
+    console.log(workout);
+
+    if (!localEnv) {
+      chrome.storage.local.set({
+        workout,
+        numSets,
+        start,
+        minsBetweenSets,
+        exerciseSchedules,
+      });
+    }
+  }, [numSets, start, minsBetweenSets, exerciseSchedules]);
+
+  const handleExerciseUpdate = (exercise, property, value) => {
+    setExerciseSchedules((exerciseSchedules) => ({
+      ...exerciseSchedules,
+      [exercise]: {
+        ...exerciseSchedules[exercise],
+        [property]: value,
+      },
+    }));
+  };
+
   return (
     <WorkoutContainer classNameName='App'>
       <p className='title'>Workout</p>
@@ -14,10 +80,31 @@ const Workout = () => {
           <i className='icon fas fa-dumbbell'></i>
         </InlineIcon>
       </p>
-      <TimeWindow />
+      <TimeWindow
+        start={start}
+        setStart={setStart}
+        numSets={numSets}
+        setNumSets={setNumSets}
+        minsBetweenSets={minsBetweenSets}
+        setMinsBetweenSets={setMinsBetweenSets}
+      />
       {EXERCISES.map((exercise) => {
-        const { name, id } = exercise;
-        return <Exercise name={name} id={id} key={id} />;
+        const name = EXERCISE_MAP[exercise];
+        const exerciseSchedule = exerciseSchedules[exercise];
+        const { showExercise, perSet, schedule } = exerciseSchedule;
+        return (
+          <Exercise
+            name={name}
+            id={exercise}
+            key={exercise}
+            perSet={perSet}
+            schedule={schedule}
+            showExercise={showExercise}
+            handleUpdate={(property, value) =>
+              handleExerciseUpdate(exercise, property, value)
+            }
+          />
+        );
       })}
     </WorkoutContainer>
   );
