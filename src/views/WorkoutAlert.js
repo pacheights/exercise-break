@@ -44,7 +44,11 @@ const WorkoutAlert = () => {
           const workout = workouts[day][time];
           const workoutKeys = Object.keys(workout);
           setWorkouts(
-            workoutKeys.map((key) => [EXERCISE_MAP[key], workout[key]])
+            workoutKeys.map((key) => {
+              const label = EXERCISE_MAP[key];
+              const perSet = workout[key];
+              return [label, perSet];
+            })
           );
           setVisible(true);
         }
