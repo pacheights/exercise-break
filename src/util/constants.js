@@ -1,5 +1,5 @@
 export const localEnv = false;
-export const DAYS = ['m', 't', 'w', 'th', 'f', 's'];
+export const DAYS = ['m', 't', 'w', 'th', 'f'];
 
 export const EXERCISE_MAP = {
   'push-ups': 'Push Ups',

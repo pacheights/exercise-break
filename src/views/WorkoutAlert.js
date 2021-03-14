@@ -27,7 +27,7 @@ const WorkoutAlert = () => {
       if (localEnv) return;
       const time = moment().format('HH:mm');
       const dayIdx = new Date().getDay() - 1;
-      if (dayIdx < 0 || dayIdx > 5) return;
+      if (dayIdx < 0 || dayIdx > 4) return;
       const day = DAYS[dayIdx];
 
       chrome.storage.local.get(['workout', 'closedTime'], (res) => {
