@@ -1,5 +1,5 @@
 export const localEnv = false;
-export const DAYS = ['m', 't', 'w', 'th', 'f'];
+export const DAYS = ['m', 't', 'w', 'th', 'f', 's'];
 
 export const EXERCISE_MAP = {
   'push-ups': 'Push Ups',
@@ -15,3 +15,5 @@ export const DEFAULT_SCHEDULE = {
   th: false,
   f: false,
 };
+
+export const closedTimeStampFormat = 'MM/DD/YYYY HH:mm';
