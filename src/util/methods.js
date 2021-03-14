@@ -40,3 +40,26 @@ export const buildWorkoutSchedule = ({
 
   return workout;
 };
+
+export const getIsActiveExercise = (perSet, schedule) => {
+  // only open exercises scheduled today
+  const dayIdx = getTodayIndex();
+  const day = DAYS[dayIdx];
+  if (!day) return false;
+  const scheduled = schedule[day];
+
+  // open any active exercise
+  // const scheduled = !!DAYS.find((day) => schedule[day]);
+  return scheduled && perSet;
+};
+
+export const getTodayIndex = () => {
+  const dayIdx = new Date().getDay() - 1;
+  return dayIdx;
+};
+
+export const getIsWeekday = (dayIdx) => {
+  const MONDAY = 0;
+  const FRIDAY = 4;
+  return dayIdx >= MONDAY || dayIdx <= FRIDAY;
+};

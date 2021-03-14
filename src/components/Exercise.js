@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { DAYS } from '../util/constants';
+import { getIsActiveExercise } from '../util/methods';
 
 const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
   const handleDayClick = (e) => {
@@ -18,6 +19,10 @@ const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
   const handleExerciseDisplay = () => {
     handleUpdate('showExercise', !showExercise);
   };
+
+  useEffect(() => {
+    handleUpdate('showExercise', getIsActiveExercise(perSet, schedule));
+  }, []);
 
   return (
     <ExerciseContainer>

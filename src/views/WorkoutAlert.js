@@ -9,6 +9,7 @@ import {
   EXERCISE_MAP,
   closedTimeStampFormat,
 } from '../util/constants';
+import { getIsWeekday, getTodayIndex } from '../util/methods';
 
 const WorkoutAlert = () => {
   const [visible, setVisible] = useState(false);
@@ -26,8 +27,8 @@ const WorkoutAlert = () => {
     setInterval(() => {
       if (localEnv) return;
       const time = moment().format('HH:mm');
-      const dayIdx = new Date().getDay() - 1;
-      if (dayIdx < 0 || dayIdx > 4) return;
+      const dayIdx = getTodayIndex();
+      if (!getIsWeekday(dayIdx)) return;
       const day = DAYS[dayIdx];
 
       chrome.storage.local.get(['workout', 'closedTime'], (res) => {
