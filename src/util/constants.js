@@ -15,3 +15,5 @@ export const DEFAULT_SCHEDULE = {
   th: false,
   f: false,
 };
+
+export const closedTimeStampFormat = 'MM/DD/YYYY HH:mm';

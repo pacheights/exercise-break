@@ -3,12 +3,24 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ShadowRoot } from '../ShadowRoot';
 import moment from 'moment';
-import { localEnv, DAYS, EXERCISE_MAP } from '../util/constants';
+import {
+  localEnv,
+  DAYS,
+  EXERCISE_MAP,
+  closedTimeStampFormat,
+} from '../util/constants';
 
 const WorkoutAlert = () => {
   const [visible, setVisible] = useState(false);
   const [timer, setTimer] = useState();
   const [workouts, setWorkouts] = useState([]);
+
+  const handleOnClose = () => {
+    if (localEnv) return;
+    const closedTime = moment().format(closedTimeStampFormat);
+    chrome.storage.local.set({ closedTime });
+    setVisible(false);
+  };
 
   const getInterval = () =>
     setInterval(() => {
@@ -17,10 +29,17 @@ const WorkoutAlert = () => {
       const dayIdx = new Date().getDay() - 1;
       if (dayIdx < 0 || dayIdx > 4) return;
       const day = DAYS[dayIdx];
-      chrome.storage.local.get(['workout'], (res) => {
-        const workouts = res.workout;
-        const tabOpen = document.visibilityState !== 'hidden';
-        if (workouts[day] && workouts[day][time] && tabOpen && !visible) {
+
+      chrome.storage.local.get(['workout', 'closedTime'], (res) => {
+        const { workouts, closedTime } = res;
+
+        const nowTimeStamp = moment().format(closedTimeStampFormat);
+        if (closedTime === nowTimeStamp) {
+          setVisible(false);
+          return;
+        }
+
+        if (workouts[day] && workouts[day][time] && !visible) {
           const workout = workouts[day][time];
           const workoutKeys = Object.keys(workout);
           setWorkouts(
@@ -29,14 +48,12 @@ const WorkoutAlert = () => {
           setVisible(true);
         }
       });
-    }, 60000);
+    }, 5000);
 
   useEffect(() => {
     clearInterval(timer);
     setTimer(getInterval());
   }, [visible]);
-
-  const handleOnClick = () => setVisible(false);
 
   return (
     <ShadowRoot>
@@ -64,7 +81,7 @@ const WorkoutAlert = () => {
             })}
             <ButtonContainer className='buttons'>
               <button
-                onClick={handleOnClick}
+                onClick={handleOnClose}
                 className='button is-info is-light'
               >
                 Close
