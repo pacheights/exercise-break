@@ -5,7 +5,7 @@ chunks throughout your work day. It'll notify you based on the interval you set.
 
 |                      Workout Settings                      |                      Workout Notification                      |
 | :--------------------------------------------------------: | :------------------------------------------------------------: |
-| ![Workout settings](https://i.imgur.com/SJp1iMv.png =250x) | ![Workout notification](https://i.imgur.com/qCwCpQb.png =250x) |
+| ![Workout settings](https://i.imgur.com/SJp1iMv.png) | ![Workout notification](https://i.imgur.com/qCwCpQb.png) |
 
 ### Stack
 
