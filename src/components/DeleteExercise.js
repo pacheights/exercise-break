@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ModalContentStyles } from '../util/constants';
 
 export const DeleteExercise = ({ modalVisible, onCancel, onDelete }) => {
   return (
@@ -25,19 +26,6 @@ export const DeleteExercise = ({ modalVisible, onCancel, onDelete }) => {
 };
 
 const ModalContent = styled.div`
-  background-color: white;
+  ${ModalContentStyles}
   height: 110px;
-  width: 80%;
-  border-radius: 5px;
-  margin: 0 auto;
-  padding: 16px;
-
-  .sub-title {
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-
-  .button {
-    margin-right: 8px;
-  }
 `;

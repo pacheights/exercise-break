@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { ModalContentStyles } from '../util/constants';
 
 const AddExercise = ({ addExercise }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -12,6 +13,7 @@ const AddExercise = ({ addExercise }) => {
   const handleInput = (e) => setNewExercise(e.target.value);
 
   const handleAddExercise = () => {
+    if (!newExercise) return;
     addExercise(newExercise);
     toggleModal();
   };
@@ -35,15 +37,13 @@ const AddExercise = ({ addExercise }) => {
                 value={newExercise}
               />
               <button className='button is-info' onClick={handleAddExercise}>
-                + Add
+                Add
+              </button>
+              <button className='button' onClick={toggleModal}>
+                Cancel
               </button>
             </ModalContent>
           </div>
-          <button
-            className='modal-close is-large'
-            aria-label='close'
-            onClick={toggleModal}
-          />
         </div>
       )}
     </>
@@ -68,19 +68,6 @@ const IconContainer = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background-color: white;
-  height: 150px;
-  width: 80%;
-  border-radius: 5px;
-  margin: 0 auto;
-  padding: 16px;
-
-  .sub-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-
-  input {
-    margin-bottom: 12px;
-  }
+  ${ModalContentStyles}
+  height: 160px;
 `;

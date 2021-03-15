@@ -25,3 +25,24 @@ export const DEFAULT_EXERCISE_SCHEDULE = {
   perSet: 0,
   schedule: { ...DEFAULT_SCHEDULE },
 };
+
+export const ModalContentStyles = `
+  background-color: white;
+  width: 80%;
+  border-radius: 5px;
+  margin: 0 auto;
+  padding: 16px;
+
+  .sub-title {
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  input {
+    margin-bottom: 12px;
+  }
+
+  .button {
+    margin-right: 8px;
+  }
+`;
