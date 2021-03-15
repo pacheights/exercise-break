@@ -27,7 +27,7 @@ export const DeleteExercise = ({ modalVisible, onCancel, onDelete }) => {
 const ModalContent = styled.div`
   background-color: white;
   height: 110px;
-  width: 50%;
+  width: 80%;
   border-radius: 5px;
   margin: 0 auto;
   padding: 16px;
