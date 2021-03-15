@@ -11,7 +11,7 @@ import {
 } from '../util/constants';
 import { getIsWeekday, getTodayIndex } from '../util/methods';
 
-const Alert = () => {
+export const Alert = () => {
   const [visible, setVisible] = useState(false);
   const [timer, setTimer] = useState();
   const [workouts, setWorkouts] = useState([]);
@@ -32,8 +32,8 @@ const Alert = () => {
       const day = DAYS[dayIdx];
 
       chrome.storage.local.get(['workout', 'closedTime'], (res) => {
-        const { workouts, closedTime } = res;
-
+        const workouts = res.workout;
+        const closedTime = res.closedTime;
         const nowTimeStamp = moment().format(closedTimeStampFormat);
         if (closedTime === nowTimeStamp) {
           setVisible(false);
@@ -139,6 +139,3 @@ const ButtonContainer = styled.div`
   }
   margin-top: 24px;
 `;
-
-export default Alert;
-export { Alert };
