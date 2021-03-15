@@ -90,7 +90,7 @@ const Workout = () => {
 
     setExerciseSchedules((exerciseSchedules) => ({
       ...exerciseSchedules,
-      [exerciseId]: { ...DEFAULT_EXERCISE_SCHEDULE, showExercise: true },
+      [exerciseId]: { ...DEFAULT_EXERCISE_SCHEDULE, newExercise: true },
     }));
   };
 
@@ -122,7 +122,7 @@ const Workout = () => {
   const createExerciseComponent = (exercise, MAP, custom) => {
     const name = MAP[exercise];
     const exerciseSchedule = exerciseSchedules[exercise];
-    const { showExercise, perSet, schedule } = exerciseSchedule;
+    const { newExercise, perSet, schedule } = exerciseSchedule;
     return (
       <Exercise
         name={name}
@@ -130,12 +130,12 @@ const Workout = () => {
         key={exercise}
         perSet={perSet}
         schedule={schedule}
-        showExercise={showExercise}
         handleUpdate={(property, value) =>
           handleExerciseUpdate(exercise, property, value)
         }
         custom={custom}
         deleteExercise={handleDeleteExercise}
+        newExercise={newExercise}
       />
     );
   };

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { DAYS } from '../util/constants';
 import { getIsActiveExercise } from '../util/methods';
@@ -6,13 +6,14 @@ import { getIsActiveExercise } from '../util/methods';
 const Exercise = ({
   name,
   id,
-  showExercise,
   schedule,
   perSet,
   handleUpdate,
   custom,
   deleteExercise,
+  newExercise,
 }) => {
+  const [showExercise, setShowExercise] = useState(false);
   const handleDayClick = (e) => {
     const day = e.target.name;
     handleUpdate('schedule', {
@@ -30,14 +31,14 @@ const Exercise = ({
   };
 
   const handleExerciseDisplay = () => {
-    handleUpdate('showExercise', !showExercise);
+    setShowExercise(!showExercise);
   };
 
   useEffect(() => {
     const isActiveExercise = getIsActiveExercise(perSet, schedule);
-    const show = isActiveExercise || showExercise;
-    handleUpdate('showExercise', show);
-  }, []);
+    const show = isActiveExercise || newExercise || showExercise;
+    setShowExercise(show);
+  }, [perSet, schedule]);
 
   return (
     <ExerciseContainer>
