@@ -1,2 +1,2 @@
 export * from './Workout';
-export * from './WorkoutAlert';
+export * from './Alert';

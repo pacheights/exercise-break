@@ -11,7 +11,7 @@ import {
 } from '../util/constants';
 import { getIsWeekday, getTodayIndex } from '../util/methods';
 
-const WorkoutAlert = () => {
+const Alert = () => {
   const [visible, setVisible] = useState(false);
   const [timer, setTimer] = useState();
   const [workouts, setWorkouts] = useState([]);
@@ -140,5 +140,5 @@ const ButtonContainer = styled.div`
   margin-top: 24px;
 `;
 
-export default WorkoutAlert;
-export { WorkoutAlert };
+export default Alert;
+export { Alert };

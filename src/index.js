@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { WorkoutAlert } from './views';
+import { Alert } from './views';
 import { localEnv } from './util/constants';
 
 const insertionPoint = document.createElement('div');
@@ -16,7 +16,7 @@ if (localEnv) {
   // Workout Reminder
   // ReactDOM.render(
   //   <React.StrictMode>
-  //     <WorkoutAlert />
+  //     <Alert />
   //   </React.StrictMode>,
   //   insertionPoint
   // );
@@ -37,7 +37,7 @@ if (localEnv) {
       )
     : ReactDOM.render(
         <React.StrictMode>
-          <WorkoutAlert />
+          <Alert />
         </React.StrictMode>,
         insertionPoint
       );

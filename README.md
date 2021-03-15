@@ -3,8 +3,8 @@
 **Exercise Break** is a Chrome extension that breaks up your workouts into
 chunks throughout your work day. It'll notify you based on the interval you set.
 
-|                      Workout Settings                      |                      Workout Notification                      |
-| :--------------------------------------------------------: | :------------------------------------------------------------: |
+|                   Workout Settings                   |                   Workout Notification                   |
+| :--------------------------------------------------: | :------------------------------------------------------: |
 | ![Workout settings](https://i.imgur.com/SJp1iMv.png) | ![Workout notification](https://i.imgur.com/qCwCpQb.png) |
 
 ### Stack
@@ -44,13 +44,13 @@ To view the **Workout Notification**, have this comment uncommented in
 ```
 ReactDOM.render(
 	<React.StrictMode>
-		<WorkoutAlert  />
+		<Alert  />
 	</React.StrictMode>,
 	insertionPoint
 );
 ```
 
-Then, in **.src/views/WorkoutAlert.js**, set the initial `useState` to true
+Then, in **.src/views/Alert.js**, set the initial `useState` to true
 `const [visible, setVisible] = useState(false);` and add this boilerplate
 exercise (format is `[label, perSet]`)
 `const [workouts, setWorkouts] = useState([['Push Ups', 15]);`
