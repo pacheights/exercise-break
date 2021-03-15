@@ -34,7 +34,9 @@ const Exercise = ({
   };
 
   useEffect(() => {
-    handleUpdate('showExercise', getIsActiveExercise(perSet, schedule));
+    const isActiveExercise = getIsActiveExercise(perSet, schedule);
+    const show = isActiveExercise || showExercise;
+    handleUpdate('showExercise', show);
   }, []);
 
   return (
