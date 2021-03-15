@@ -1,4 +1,4 @@
-import { DAYS } from './constants';
+import { DAYS, EXERCISES, DEFAULT_EXERCISE_SCHEDULE } from './constants';
 import moment from 'moment';
 
 export const buildWorkoutSchedule = ({
@@ -62,4 +62,14 @@ export const getIsWeekday = (dayIdx) => {
   const MONDAY = 0;
   const FRIDAY = 4;
   return dayIdx >= MONDAY || dayIdx <= FRIDAY;
+};
+
+export const getDefaultExerciseSchedule = () => {
+  const exerciseSchedules = {};
+  for (const exercise of EXERCISES) {
+    exerciseSchedules[exercise] = {
+      ...DEFAULT_EXERCISE_SCHEDULE,
+    };
+  }
+  return exerciseSchedules;
 };

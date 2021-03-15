@@ -1,9 +1,18 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { DAYS } from '../util/constants';
+import { DAYS, EXERCISE_MAP } from '../util/constants';
 import { getIsActiveExercise } from '../util/methods';
 
-const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
+const Exercise = ({
+  name,
+  id,
+  showExercise,
+  schedule,
+  perSet,
+  handleUpdate,
+  custom,
+  deleteExercise,
+}) => {
   const handleDayClick = (e) => {
     const day = e.target.name;
     handleUpdate('schedule', {
@@ -14,6 +23,10 @@ const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
 
   const handlePerSetChange = (e) => {
     handleUpdate('perSet', parseInt(e.target.value));
+  };
+
+  const handleDeleteExercise = () => {
+    deleteExercise(id);
   };
 
   const handleExerciseDisplay = () => {
@@ -70,6 +83,13 @@ const Exercise = ({ name, showExercise, schedule, perSet, handleUpdate }) => {
             min='0'
             max='120'
           />
+          {custom && (
+            <DeleteContainer>
+              <DeleteTextButton onClick={handleDeleteExercise}>
+                Delete Exercise
+              </DeleteTextButton>
+            </DeleteContainer>
+          )}
         </div>
       )}
     </ExerciseContainer>
@@ -88,6 +108,20 @@ const Schedule = styled.div`
 
 const ExerciseContainer = styled.div`
   margin-bottom: 8px;
+`;
+
+const DeleteContainer = styled.div`
+  margin-top: 18px;
+`;
+
+const DeleteTextButton = styled.p`
+  color: red;
+  font-size: 14px;
+  width: fit-content;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.65;
+  }
 `;
 
 export default Exercise;

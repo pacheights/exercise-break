@@ -1,23 +1,18 @@
 /* global chrome */
 import React, { useState, useEffect } from 'react';
-import { Exercise, TimeWindow } from '../components';
+import { AddExercise, Exercise, TimeWindow } from '../components';
 import styled from 'styled-components';
-import { EXERCISE_MAP, localEnv, DEFAULT_SCHEDULE } from '../util/constants';
-import { buildWorkoutSchedule } from '../util/methods';
-
-const EXERCISES = Object.keys(EXERCISE_MAP);
-
-const getDefaultExerciseSchedule = () => {
-  const exerciseSchedules = {};
-  for (const exercise of EXERCISES) {
-    exerciseSchedules[exercise] = {
-      showExercise: false,
-      perSet: 0,
-      schedule: { ...DEFAULT_SCHEDULE },
-    };
-  }
-  return exerciseSchedules;
-};
+import {
+  EXERCISE_MAP,
+  localEnv,
+  EXERCISES,
+  DEFAULT_EXERCISE_SCHEDULE,
+} from '../util/constants';
+import {
+  buildWorkoutSchedule,
+  getDefaultExerciseSchedule,
+} from '../util/methods';
+import moment from 'moment';
 
 const Workout = () => {
   const [numSets, setNumSets] = useState('0');
@@ -26,6 +21,7 @@ const Workout = () => {
   const [exerciseSchedules, setExerciseSchedules] = useState(() =>
     getDefaultExerciseSchedule()
   );
+  const [customExercises, setCustomExercises] = useState({});
 
   useEffect(() => {
     if (!localEnv) {
@@ -37,6 +33,8 @@ const Workout = () => {
           setMinsBetweenSets(savedValues['minsBetweenSets']);
         savedValues['exerciseSchedules'] &&
           setExerciseSchedules(savedValues['exerciseSchedules']);
+        savedValues['customExercises'] &&
+          setCustomExercises(savedValues['customExercises']);
       });
     }
   }, []);
@@ -60,6 +58,13 @@ const Workout = () => {
     }
   }, [numSets, start, minsBetweenSets, exerciseSchedules]);
 
+  useEffect(() => {
+    if (localEnv) return;
+    chrome.storage.local.set({
+      customExercises,
+    });
+  }, [customExercises]);
+
   const handleExerciseUpdate = (exercise, property, value) => {
     setExerciseSchedules((exerciseSchedules) => ({
       ...exerciseSchedules,
@@ -68,6 +73,56 @@ const Workout = () => {
         [property]: value,
       },
     }));
+  };
+
+  const handleAddExercise = (exercise) => {
+    const exerciseId = `${exercise} ${moment().unix()}`;
+    setCustomExercises((customExercises) => ({
+      ...customExercises,
+      [exerciseId]: exercise,
+    }));
+
+    setExerciseSchedules((exerciseSchedules) => ({
+      ...exerciseSchedules,
+      [exerciseId]: { ...DEFAULT_EXERCISE_SCHEDULE, showExercise: true },
+    }));
+  };
+
+  const handleDeleteExercise = (exerciseId) => {
+    setCustomExercises((customExercises) => {
+      const customCopy = { ...customExercises };
+      delete customCopy[exerciseId];
+      return customCopy;
+    });
+
+    setExerciseSchedules((exerciseSchedules) => {
+      const scheduleCopy = { ...exerciseSchedules };
+      delete scheduleCopy[exerciseId];
+      return scheduleCopy;
+    });
+  };
+
+  const CUSTOM_EXERCISES = Object.keys(customExercises);
+
+  const createExerciseComponent = (exercise, MAP, custom) => {
+    const name = MAP[exercise];
+    const exerciseSchedule = exerciseSchedules[exercise];
+    const { showExercise, perSet, schedule } = exerciseSchedule;
+    return (
+      <Exercise
+        name={name}
+        id={exercise}
+        key={exercise}
+        perSet={perSet}
+        schedule={schedule}
+        showExercise={showExercise}
+        handleUpdate={(property, value) =>
+          handleExerciseUpdate(exercise, property, value)
+        }
+        custom={custom}
+        deleteExercise={handleDeleteExercise}
+      />
+    );
   };
 
   return (
@@ -87,24 +142,13 @@ const Workout = () => {
         minsBetweenSets={minsBetweenSets}
         setMinsBetweenSets={setMinsBetweenSets}
       />
-      {EXERCISES.map((exercise) => {
-        const name = EXERCISE_MAP[exercise];
-        const exerciseSchedule = exerciseSchedules[exercise];
-        const { showExercise, perSet, schedule } = exerciseSchedule;
-        return (
-          <Exercise
-            name={name}
-            id={exercise}
-            key={exercise}
-            perSet={perSet}
-            schedule={schedule}
-            showExercise={showExercise}
-            handleUpdate={(property, value) =>
-              handleExerciseUpdate(exercise, property, value)
-            }
-          />
-        );
-      })}
+      {EXERCISES.map((exercise) =>
+        createExerciseComponent(exercise, EXERCISE_MAP, false)
+      )}
+      {CUSTOM_EXERCISES.map((exercise) =>
+        createExerciseComponent(exercise, customExercises, true)
+      )}
+      <AddExercise addExercise={handleAddExercise} />
     </WorkoutContainer>
   );
 };

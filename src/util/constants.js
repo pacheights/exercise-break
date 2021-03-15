@@ -1,4 +1,4 @@
-export const localEnv = false;
+export const localEnv = true;
 export const DAYS = ['m', 't', 'w', 'th', 'f'];
 
 export const EXERCISE_MAP = {
@@ -7,6 +7,8 @@ export const EXERCISE_MAP = {
   planks: 'Planks',
   'jumping-jacks': 'Jumping Jacks',
 };
+
+export const EXERCISES = Object.keys(EXERCISE_MAP);
 
 export const DEFAULT_SCHEDULE = {
   m: false,
@@ -17,3 +19,9 @@ export const DEFAULT_SCHEDULE = {
 };
 
 export const closedTimeStampFormat = 'MM/DD/YYYY HH:mm';
+
+export const DEFAULT_EXERCISE_SCHEDULE = {
+  showExercise: false,
+  perSet: 0,
+  schedule: { ...DEFAULT_SCHEDULE },
+};
