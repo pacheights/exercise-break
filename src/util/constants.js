@@ -21,7 +21,7 @@ export const DEFAULT_SCHEDULE = {
 export const closedTimeStampFormat = 'MM/DD/YYYY HH:mm';
 
 export const DEFAULT_EXERCISE_SCHEDULE = {
-  showExercise: false,
+  newExercise: false,
   perSet: 0,
   schedule: { ...DEFAULT_SCHEDULE },
 };
