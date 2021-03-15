@@ -1,6 +1,11 @@
 /* global chrome */
 import React, { useState, useEffect } from 'react';
-import { AddExercise, Exercise, TimeWindow } from '../components';
+import {
+  AddExercise,
+  Exercise,
+  TimeWindow,
+  DeleteExercise,
+} from '../components';
 import styled from 'styled-components';
 import {
   EXERCISE_MAP,
@@ -22,6 +27,7 @@ const Workout = () => {
     getDefaultExerciseSchedule()
   );
   const [customExercises, setCustomExercises] = useState({});
+  const [exerciseToDelete, setExerciseToDelete] = useState('');
 
   useEffect(() => {
     if (!localEnv) {
@@ -88,7 +94,9 @@ const Workout = () => {
     }));
   };
 
-  const handleDeleteExercise = (exerciseId) => {
+  const handleDeleteExercise = (exerciseId) => setExerciseToDelete(exerciseId);
+
+  const deleteExercise = (exerciseId) => {
     setCustomExercises((customExercises) => {
       const customCopy = { ...customExercises };
       delete customCopy[exerciseId];
@@ -101,6 +109,13 @@ const Workout = () => {
       return scheduleCopy;
     });
   };
+
+  const confirmDelete = () => {
+    deleteExercise(exerciseToDelete);
+    closeDeleteModal();
+  };
+
+  const closeDeleteModal = () => setExerciseToDelete('');
 
   const CUSTOM_EXERCISES = Object.keys(customExercises);
 
@@ -149,6 +164,11 @@ const Workout = () => {
         createExerciseComponent(exercise, customExercises, true)
       )}
       <AddExercise addExercise={handleAddExercise} />
+      <DeleteExercise
+        modalVisible={!!exerciseToDelete}
+        onCancel={closeDeleteModal}
+        onDelete={confirmDelete}
+      />
     </WorkoutContainer>
   );
 };
