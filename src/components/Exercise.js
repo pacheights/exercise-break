@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { DAYS, EXERCISE_MAP } from '../util/constants';
+import { DAYS } from '../util/constants';
 import { getIsActiveExercise } from '../util/methods';
 
 const Exercise = ({
