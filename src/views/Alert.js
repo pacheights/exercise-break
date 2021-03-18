@@ -56,7 +56,7 @@ export const Alert = () => {
           }
         }
       );
-    }, 5000);
+    }, 2000);
 
   useEffect(() => {
     clearInterval(timer);
