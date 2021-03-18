@@ -31,28 +31,31 @@ export const Alert = () => {
       if (!getIsWeekday(dayIdx)) return;
       const day = DAYS[dayIdx];
 
-      chrome.storage.local.get(['workout', 'closedTime'], (res) => {
-        const workouts = res.workout;
-        const closedTime = res.closedTime;
-        const nowTimeStamp = moment().format(closedTimeStampFormat);
-        if (closedTime === nowTimeStamp) {
-          setVisible(false);
-          return;
-        }
+      chrome.storage.local.get(
+        ['workout', 'closedTime', 'customExercises'],
+        (res) => {
+          const workouts = res.workout;
+          const { closedTime, customExercises } = res;
+          const nowTimeStamp = moment().format(closedTimeStampFormat);
+          if (closedTime === nowTimeStamp) {
+            setVisible(false);
+            return;
+          }
 
-        if (workouts[day] && workouts[day][time] && !visible) {
-          const workout = workouts[day][time];
-          const workoutKeys = Object.keys(workout);
-          setWorkouts(
-            workoutKeys.map((key) => {
-              const label = EXERCISE_MAP[key];
-              const perSet = workout[key];
-              return [label, perSet];
-            })
-          );
-          setVisible(true);
+          if (workouts[day] && workouts[day][time] && !visible) {
+            const workout = workouts[day][time];
+            const workoutKeys = Object.keys(workout);
+            setWorkouts(
+              workoutKeys.map((key) => {
+                const label = EXERCISE_MAP[key] || customExercises[key];
+                const perSet = workout[key];
+                return [label, perSet];
+              })
+            );
+            setVisible(true);
+          }
         }
-      });
+      );
     }, 5000);
 
   useEffect(() => {
