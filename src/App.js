@@ -26,8 +26,8 @@ const AppContainer = styled.div`
   font-family: 'BlinkMacSystemFont', '-apple-system', 'Segoe UI', 'Roboto',
     'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     Helvetica, Arial, sans-serif;
-  height: 500px;
-  width: 360px;
+  height: 580px;
+  width: 392px;
   overflow-y: scroll;
   border: 1px solid lightgray;
   ::-webkit-scrollbar {
