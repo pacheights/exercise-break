@@ -105,7 +105,9 @@ const Schedule = styled.div`
   margin-bottom: 20px;
 
   button {
-    min-width: 50px;
+    min-width: 42px;
+    max-width: 42px;
+    height: 38px;
   }
 `;
 
