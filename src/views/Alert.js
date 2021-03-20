@@ -19,7 +19,7 @@ export const Alert = () => {
   const handleOnClose = () => {
     if (localEnv) return;
     const closedTime = moment().format(closedTimeStampFormat);
-    chrome.storage.local.set({ closedTime });
+    chrome.storage.local.set({ closedTime, snooze: null });
     setVisible(false);
   };
 
@@ -32,31 +32,41 @@ export const Alert = () => {
       const day = DAYS[dayIdx];
 
       chrome.storage.local.get(
-        ['workout', 'closedTime', 'customExercises'],
+        ['workout', 'closedTime', 'customExercises', 'snooze'],
         (res) => {
           const workouts = res.workout;
-          const { closedTime, customExercises } = res;
+          const { closedTime, customExercises, snooze } = res;
           const nowTimeStamp = moment().format(closedTimeStampFormat);
-          if (closedTime === nowTimeStamp) {
-            setVisible(false);
-            return;
-          }
+
+          if (closedTime === nowTimeStamp) return setVisible(false);
+          if (snooze === nowTimeStamp) return setVisible(true);
 
           if (workouts[day] && workouts[day][time] && !visible) {
             const workout = workouts[day][time];
-            const workoutKeys = Object.keys(workout);
-            setWorkouts(
-              workoutKeys.map((key) => {
-                const label = EXERCISE_MAP[key] || customExercises[key];
-                const perSet = workout[key];
-                return [label, perSet];
-              })
-            );
+            populateWorkoutArray(workout, customExercises);
             setVisible(true);
           }
         }
       );
     }, 2000);
+
+  const populateWorkoutArray = (workout, customExercises) => {
+    const workoutKeys = Object.keys(workout);
+    setWorkouts(
+      workoutKeys.map((key) => {
+        const label = EXERCISE_MAP[key] || customExercises[key];
+        const perSet = workout[key];
+        return [label, perSet];
+      })
+    );
+  };
+
+  const handleSnooze = () => {
+    if (localEnv) return;
+    handleOnClose();
+    const snooze = moment().add(2, 'm').format(closedTimeStampFormat);
+    chrome.storage.local.set({ snooze });
+  };
 
   useEffect(() => {
     clearInterval(timer);
@@ -93,6 +103,12 @@ export const Alert = () => {
                 className='button is-info is-light'
               >
                 Close
+              </button>
+              <button
+                className='button is-danger is-light'
+                onClick={handleSnooze}
+              >
+                Snooze
               </button>
             </ButtonContainer>
           </ReminderContainer>
