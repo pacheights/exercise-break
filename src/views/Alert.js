@@ -34,11 +34,16 @@ export const Alert = () => {
         ['workout', 'closedTime', 'customExercises', 'snooze'],
         (res) => {
           const workouts = res.workout;
-          const { closedTime, customExercises, snooze } = res;
+          const { closedTime, customExercises, snooze } = res || {};
           const nowTimeStamp = moment().format(closedTimeStampFormat);
 
           if (closedTime === nowTimeStamp) return setVisible(false);
-          if (snooze === nowTimeStamp && !visible) return setVisible(true);
+          const { snoozeTimestamp, workoutArray } = snooze || {};
+          if (snoozeTimestamp === nowTimeStamp && !visible) {
+            setWorkouts(workoutArray);
+            setVisible(true);
+            return;
+          }
 
           if (workouts[day] && workouts[day][time] && !visible) {
             const workout = workouts[day][time];
@@ -63,7 +68,11 @@ export const Alert = () => {
   const handleSnooze = () => {
     if (localEnv) return;
     handleOnClose();
-    const snooze = moment().add(2, 'm').format(closedTimeStampFormat);
+    const snoozeTimestamp = moment().add(2, 'm').format(closedTimeStampFormat);
+    const snooze = {
+      snoozeTimestamp,
+      workoutArray: workouts,
+    };
     chrome.storage.local.set({ snooze });
   };
 
